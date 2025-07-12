@@ -1,9 +1,12 @@
-package dari
+package test_test
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/hyteinc/dari"
+)
 
 type Tenant struct {
-	TenantId string `json:"tenantId" dynamodbav:"tenantId,omitempty"`
+	TenantID string `json:"tenantID" dynamodbav:"tenantID,omitempty"`
 	Name     string `json:"name" dynamodbav:"name,omitempty"`
 
 	Version int `json:"version" dynamodbav:"version,omitempty"`
@@ -11,15 +14,15 @@ type Tenant struct {
 
 func NewTenant(tenantId string) *Tenant {
 	return &Tenant{
-		TenantId: tenantId,
+		TenantID: tenantId,
 	}
 }
 
-func (t Tenant) Keys() KeySet {
-	return KeySet{
-		TableKey: {
+func (t Tenant) Keys() dari.KeySet {
+	return dari.KeySet{
+		dari.TableKey: {
 			"tenant",
-			fmt.Sprintf("tenantId#%s", t.TenantId),
+			fmt.Sprintf("tenantId#%s", t.TenantID),
 		},
 	}
 }
