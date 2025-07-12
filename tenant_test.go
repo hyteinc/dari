@@ -13,9 +13,9 @@ type Tenant struct {
 	Version int `json:"version" dynamodbav:"version,omitempty"`
 }
 
-func NewTenant(tenantId string) *Tenant {
+func NewTenant(tenantID string) *Tenant {
 	return &Tenant{
-		TenantID: tenantId,
+		TenantID: tenantID,
 	}
 }
 

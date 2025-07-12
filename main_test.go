@@ -26,21 +26,19 @@ func TestMain(m *testing.M) {
 	)
 	if err != nil {
 		panic(err)
-		return
 	}
 
 	testUUID, err := uuid.NewV7()
 	if err != nil {
 		panic(err)
-		return
 	}
 
-	dynamoDbClient := dynamodb.NewFromConfig(cfg)
-	table = dari.NewTable(dynamoDbClient, "test-table", "pk", "sk", "version")
+	dynamoDBClient := dynamodb.NewFromConfig(cfg)
+	table = dari.NewTable(dynamoDBClient, "test-table", "pk", "sk", "version")
 	table.PrefixPkValues(testUUID.String())
 
 	skPkIndex = table.WithIndex(skPkIndexName, "sk", "pk")
-
+	
 	m.Run()
 }
 

@@ -33,7 +33,7 @@ func Get[T any](ctx context.Context, t *Table, k Keys) (*T, error) {
 		return nil, err
 	} else if out.Item != nil {
 		var tItem T
-		err := attributevalue.UnmarshalMap(out.Item, &tItem)
+		err = attributevalue.UnmarshalMap(out.Item, &tItem)
 		if err != nil {
 			return nil, err
 		}

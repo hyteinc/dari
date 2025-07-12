@@ -15,10 +15,10 @@ type Project struct {
 	Version int `json:"version" dynamodbav:"version,omitempty"`
 }
 
-func NewProject(tenantId, projectId string) *Project {
+func NewProject(tenantID, projectID string) *Project {
 	return &Project{
-		TenantID:  tenantId,
-		ProjectID: projectId,
+		TenantID:  tenantID,
+		ProjectID: projectID,
 	}
 }
 

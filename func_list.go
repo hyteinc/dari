@@ -52,7 +52,7 @@ func ListWithPrefix[T any](ctx context.Context, t Queryable, k Keys) ([]T, error
 	for _, item := range results.Items {
 		var tItem T
 
-		err := attributevalue.UnmarshalMap(item, &tItem)
+		err = attributevalue.UnmarshalMap(item, &tItem)
 		if err != nil {
 			continue
 		}

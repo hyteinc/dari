@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"strconv"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
@@ -46,11 +47,11 @@ func Put[T Keys](ctx context.Context, t *Table, item *T) error {
 					"#v": t.version,
 				}
 				input.ExpressionAttributeValues = map[string]types.AttributeValue{
-					":v": &types.AttributeValueMemberN{Value: fmt.Sprintf("%d", versionValue)},
+					":v": &types.AttributeValueMemberN{Value: strconv.Itoa(versionValue)},
 				}
 			}
 
-			putMap[t.version] = &types.AttributeValueMemberN{Value: fmt.Sprintf("%d", versionValue+1)}
+			putMap[t.version] = &types.AttributeValueMemberN{Value: strconv.Itoa(versionValue + 1)}
 		}
 	}
 
