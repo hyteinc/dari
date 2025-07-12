@@ -10,6 +10,9 @@ import (
 	"testing"
 )
 
+//go:generate go test -coverprofile=coverage .
+//go:generate go tool cover -html=coverage
+
 var table *Table
 
 var skPkIndexName KeyName = "sk-pk-index"
@@ -112,5 +115,26 @@ func TestIndex(t *testing.T) {
 	}
 
 	fmt.Println(items)
+}
+
+func TestUpdateVersion(t *testing.T) {
+	frogKey := NewTenant("frog")
+	gotFrog, err := Get[Tenant](t.Context(), table, frogKey)
+	if err != nil {
+		t.Errorf("failed to get tenant[%s]: %v", frogKey.TenantId, err)
+		return
+	}
+
+	gotFrog.Name = fmt.Sprintf("Frog Tenant [%d]", gotFrog.Version)
+	err = Put[Tenant](t.Context(), table, gotFrog)
+	if err != nil {
+		t.Errorf("failed to update tenant[%s]: %v", gotFrog.TenantId, err)
+	}
+
+	gotFrog.Name = "Bad Update"
+	err = Put[Tenant](t.Context(), table, gotFrog)
+	if err == nil {
+		t.Errorf("failed to prevent update due to version mismatch[%s]: %v", gotFrog.TenantId, err)
+	}
 
 }
