@@ -3,6 +3,7 @@ package dari
 import (
 	"context"
 	"fmt"
+
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
@@ -37,10 +38,10 @@ func ListWithPrefix[T any](ctx context.Context, t Queryable, k Keys) ([]T, error
 		queryInput.IndexName = aws.String(string(t.IndexName()))
 	}
 
-	//queryInputJson, err := json.Marshal(queryInput)
-	//if err == nil {
-	//	fmt.Println(string(queryInputJson))
-	//}
+	// queryInputJson, err := json.Marshal(queryInput)
+	// if err == nil {
+	// 	fmt.Println(string(queryInputJson))
+	// }
 
 	results, err := t.Client().Query(ctx, &queryInput)
 	if err != nil {

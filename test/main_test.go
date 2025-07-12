@@ -3,12 +3,12 @@ package test_test
 import (
 	"context"
 	"fmt"
+	"testing"
+
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/google/uuid"
 	"github.com/hyteinc/dari"
-	"log"
-	"testing"
 )
 
 var table *dari.Table
@@ -25,13 +25,13 @@ func TestMain(m *testing.M) {
 		config.WithRegion("us-east-1"),
 	)
 	if err != nil {
-		log.Fatalf("unable to load SDK config, %v", err)
+		panic(err)
 		return
 	}
 
 	testUUID, err := uuid.NewV7()
 	if err != nil {
-		log.Fatalf("unable to generate uuid, %v", err)
+		panic(err)
 		return
 	}
 
@@ -99,8 +99,6 @@ func TestPutListProjects(t *testing.T) {
 	if len(frogProjects) != 3 {
 		t.Errorf("got %d projects, want 3", len(frogProjects))
 	}
-
-	fmt.Println(frogProjects)
 }
 
 func TestIndex(t *testing.T) {
@@ -111,8 +109,6 @@ func TestIndex(t *testing.T) {
 		t.Errorf("failed to list projects: %v", err)
 		return
 	}
-
-	fmt.Println(items)
 }
 
 func TestUpdateVersion(t *testing.T) {
