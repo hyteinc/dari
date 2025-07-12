@@ -30,17 +30,19 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-go-
 
-      - name: Install linters
-        run: |
-          go install golang.org/x/lint/golint@latest
+      - name: Install golangci-lint and run
+        uses: golangci/golangci-lint-action@v4
+        with:
+          version: latest
+          args: --timeout=1m
 
       - name: Tidy and Vet
         run: |
           go mod tidy
           go vet ./...
 
-      - name: Lint
-        run: golint ./...
+#      - name: Lint
+#        run: golint ./...
 
 #      - name: Test
 #        run: go test -v ./...
