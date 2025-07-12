@@ -1,4 +1,4 @@
-package test_test
+package dari_test
 
 import (
 	"context"
@@ -102,9 +102,8 @@ func TestPutListProjects(t *testing.T) {
 }
 
 func TestIndex(t *testing.T) {
-
 	proj := NewProject("", "project1")
-	items, err := dari.ListWithPrefix[Project](t.Context(), skPkIndex, proj)
+	_, err := dari.ListWithPrefix[Project](t.Context(), skPkIndex, proj)
 	if err != nil {
 		t.Errorf("failed to list projects: %v", err)
 		return

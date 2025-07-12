@@ -1,4 +1,4 @@
-package test_test
+package dari_test
 
 import (
 	"fmt"
