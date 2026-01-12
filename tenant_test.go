@@ -8,7 +8,7 @@ import (
 
 type Tenant struct {
 	TenantID string `json:"tenantID" dynamodbav:"tenantID,omitempty"`
-	Name     string `json:"name" dynamodbav:"name,omitempty"`
+	Name     string `json:"name"     dynamodbav:"name,omitempty"`
 
 	Version int `json:"version" dynamodbav:"version,omitempty"`
 }

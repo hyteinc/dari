@@ -7,7 +7,7 @@ import (
 )
 
 type Project struct {
-	TenantID  string `json:"tenantID" dynamodbav:"tenantID,omitempty"`
+	TenantID  string `json:"tenantID"  dynamodbav:"tenantID,omitempty"`
 	ProjectID string `json:"projectID" dynamodbav:"projectID,omitempty"`
 
 	Name string `json:"name" dynamodbav:"name,omitempty"`

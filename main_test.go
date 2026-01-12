@@ -20,10 +20,7 @@ var skPkIndex dari.Queryable
 func TestMain(m *testing.M) {
 	ctx := context.Background()
 
-	cfg, err := config.LoadDefaultConfig(ctx,
-		config.WithSharedConfigProfile("hyte"),
-		config.WithRegion("us-east-1"),
-	)
+	cfg, err := config.LoadDefaultConfig(ctx, config.WithSharedConfigProfile("hyte"), config.WithRegion("us-east-1"))
 	if err != nil {
 		panic(err)
 	}
@@ -38,7 +35,7 @@ func TestMain(m *testing.M) {
 	table.PrefixPkValues(testUUID.String())
 
 	skPkIndex = table.WithIndex(skPkIndexName, "sk", "pk")
-	
+
 	m.Run()
 }
 
