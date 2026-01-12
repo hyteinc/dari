@@ -7,7 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 )
 
-var TableKey KeyName = ""
+var TableKey KeyName
 
 type Table struct {
 	name   string
@@ -56,7 +56,6 @@ func (t *Table) keysFor(k Keys) (*types.AttributeValueMemberS, *types.AttributeV
 	}
 
 	return &types.AttributeValueMemberS{Value: pkValue}, &types.AttributeValueMemberS{Value: skValue}, nil
-
 }
 
 func (t *Table) Client() *dynamodb.Client {
