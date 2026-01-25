@@ -90,3 +90,17 @@ func (t *Table) WithIndex(indexName KeyName, pk, sk string) Queryable {
 		client:         t.client,
 	}
 }
+
+func (t *Table) WithSimilarTable(tableName string) *Table {
+	return &Table{
+		name:           tableName,
+		pk:             t.pk,
+		pkOrig:         t.pkOrig,
+		prefixPkValues: t.prefixPkValues,
+		sk:             t.sk,
+		version:        t.version,
+		indexName:      t.indexName,
+		client:         t.client,
+	}
+}
+
