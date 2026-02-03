@@ -4,67 +4,39 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"strconv"
 
-	"github.com/aws/aws-sdk-go-v2/aws"
-	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
-	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 	"github.com/aws/smithy-go"
 )
 
 func Put[T Keys](ctx context.Context, t *Table, item *T) error {
-	putMap, err := attributevalue.MarshalMap(item)
+	if item == nil {
+		return fmt.Errorf("nil item")
+	}
+
+	// Reuse the tx builder to get identical Item + condition/version logic.
+	txItem, err := buildPutTxItem(t, any(item).(Keys), 0)
 	if err != nil {
 		return err
 	}
 
-	k, _ := any(item).(Keys)
-	pkValue, skValue, err := t.keysFor(k)
-	if err != nil {
-		return err
-	}
-
-	putMap[t.pk] = pkValue
-	if t.sk != "" && skValue.Value != "" {
-		putMap[t.sk] = skValue
-	}
-
+	put := txItem.Put
 	input := &dynamodb.PutItemInput{
-		TableName: aws.String(t.name),
-		Item:      putMap,
-	}
-
-	if t.version != "" {
-		version, versionOk := any(item).(Version)
-		if versionOk {
-			versionValue := version.VersionValue()
-			if versionValue == 0 && t.sk != "" {
-				input.ConditionExpression = aws.String(fmt.Sprintf("attribute_not_exists(%s)", t.sk))
-			} else {
-				input.ConditionExpression = aws.String("#v = :v")
-				input.ExpressionAttributeNames = map[string]string{
-					"#v": t.version,
-				}
-				input.ExpressionAttributeValues = map[string]types.AttributeValue{
-					":v": &types.AttributeValueMemberN{Value: strconv.Itoa(versionValue)},
-				}
-			}
-
-			putMap[t.version] = &types.AttributeValueMemberN{Value: strconv.Itoa(versionValue + 1)}
-		}
+		TableName:                 put.TableName,
+		Item:                      put.Item,
+		ConditionExpression:       put.ConditionExpression,
+		ExpressionAttributeNames:  put.ExpressionAttributeNames,
+		ExpressionAttributeValues: put.ExpressionAttributeValues,
 	}
 
 	_, err = t.client.PutItem(ctx, input)
-	if err != nil {
-		var oe smithy.APIError
-		if errors.As(err, &oe) {
-			if oe.ErrorCode() == "ConditionalCheckFailedException" {
-				return ErrAlreadyExists
-			}
-		}
-
-		return err
+	if err == nil {
+		return nil
 	}
-	return nil
+
+	var oe smithy.APIError
+	if errors.As(err, &oe) && oe.ErrorCode() == "ConditionalCheckFailedException" {
+		return ErrAlreadyExists
+	}
+	return err
 }
