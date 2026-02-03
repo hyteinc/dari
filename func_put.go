@@ -3,7 +3,6 @@ package dari
 import (
 	"context"
 	"errors"
-	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/smithy-go"
@@ -11,7 +10,7 @@ import (
 
 func Put[T Keys](ctx context.Context, t *Table, item *T) error {
 	if item == nil {
-		return fmt.Errorf("nil item")
+		return errors.New("nil item")
 	}
 
 	// Reuse the tx builder to get identical Item + condition/version logic.

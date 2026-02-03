@@ -13,12 +13,14 @@ import (
 	"github.com/aws/smithy-go"
 )
 
+const DynamodbMaxTxItems = 25
+
 func PutTx(ctx context.Context, t *Table, items ...Keys) error {
 	switch n := len(items); {
 	case n == 0:
 		return nil
-	case n > 25:
-		return fmt.Errorf("too many items (%d): DynamoDB transactions support up to 25 actions", n)
+	case n > DynamodbMaxTxItems:
+		return fmt.Errorf("too many items (%d): DynamoDB transactions support up to %d actions", n, DynamodbMaxTxItems)
 	}
 
 	txItems := make([]types.TransactWriteItem, 0, len(items))

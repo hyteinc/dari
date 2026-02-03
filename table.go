@@ -103,4 +103,3 @@ func (t *Table) WithSimilarTable(tableName string) *Table {
 		client:         t.client,
 	}
 }
-
